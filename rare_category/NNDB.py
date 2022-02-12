@@ -33,12 +33,12 @@ def nndb(S, p):
     selected_set = set()
     # Conduct the for loop to increase hyperball radius
     for t in range(1, n + 1):
-        # Define S_i = max (N_i - N_k) with x_k i NN(x_i, t*r_prime)
+        # Define s_i = max (N_i - N_k) with x_k in NN(x_i, t*r_prime)
         S_i = []
-        t_r_prime = t*r_prime
+        t_r_prime = t * r_prime
         for i, example in enumerate(S):
             # For every example in S - that hasn't been selected
-            if example not in selected_set:
+            if i not in selected_set:
                 s_i = calculate_s_i(S, tree, example, N_i[i], t_r_prime)
                 S_i.append(s_i)
             else:
@@ -46,19 +46,19 @@ def nndb(S, p):
                 S_i.append(float("-inf"))
         # Then Query x = argmax S_i, with x_i in S
         # Here only consider the first max one
-        x_to_query = S.index(max(S_i))
+        query_index = S_i.index(max(S_i))
         # x_to_query_index_list = [i for i,x in enumerate(S_i) if x==max(S_i)]
 
-        label = query_by_oracle(x_to_query)
+        label = query_by_oracle(S[query_index])
         # If label of x is 2, break
         if label == 2:
             break
         else:
             # Add to the selected_set and begin next loop
-            selected_set.add(tuple(x_to_query))
+            selected_set.add(query_index)
 
 
-# Function : Help calculate each s_i = max (n_i - n_k) with x_k i NN(x_i, t*r_prime)
+# function : help calculate each s_i = max (n_i - n_k) with x_k in NN(x_i, t*r_prime)
 # parameters : samples(S), created KDTree(tree), current example(example), n_i of current sample(n_i), loop t*r_prime(r)
 def calculate_s_i(S, tree, example, n_i, r):
     # Find neighbors of example within r radius
