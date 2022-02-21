@@ -106,8 +106,9 @@ def alice(S, P):
                     samples_y[query_index] = label
                     break
                 else:
-                    # Mark the class that x belongs to as discovered
-                    discovered_list[label - 2] = 1
+                    if label != 1:
+                        # Mark the class that x belongs to as discovered
+                        discovered_list[label - 2] = 1
                     # Add to the selected_set and begin next loop
                     selected_set.add(query_index)
                     # Record the label of current sample
