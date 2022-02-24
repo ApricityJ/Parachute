@@ -45,7 +45,7 @@ def grade(S, P, alpha):
     for i in range(n):
         for k in range(n):
             if i != k:
-                W_prime[i][k] = math.exp(- (np.linalg.norm(S_matrix[i] - S_matrix[k]))**2 / (2*sigma**2))
+                W_prime[i][k] = math.exp(- np.linalg.norm(S_matrix[i] - S_matrix[k]) / (2*sigma**2))
 
     # Step 4
     # Initialize the diagonal matrix D
@@ -58,7 +58,7 @@ def grade(S, P, alpha):
         D[i][i] = D_ii
 
     # Step 5
-    # Calculate D^-1/2
+    # Calculate D^-1/2, maybe too redundant here
     V, Q = np.linalg.eig(D)
     V = np.diag(V ** (-0.5))
     D_prime = np.dot(np.dot(Q, V), np.linalg.inv(Q))
@@ -139,7 +139,7 @@ def grade(S, P, alpha):
                             break
                     if continue_calculate_flag:
                         # The original calculation for example not selected
-                        s_i_c = calculate_s_i(S, A, N_i_C[i], example, k, t_a_c)
+                        s_i_c = calculate_s_i(S, A, N_i_C[i], k, t_a_c)
                         S_i_c.append(s_i_c)
 
                 # Then Query x = argmax S_i, with x_i in S
@@ -164,8 +164,8 @@ def grade(S, P, alpha):
 
 # function : help calculate each s_i = max (n_i_c - n_k_c) with x_k in NN(x_i, a_c/t)
 # parameters : samples(S), global similarity matrix(A), N_i_C of current rare class(N_i_c),
-#              current example(example), current example index(example_index), loop a_c/t(t_a_c)
-def calculate_s_i(S, A, N_i_c, example, example_index, t_a_c):
+#              current example index(example_index), loop a_c/t(t_a_c)
+def calculate_s_i(S, A, N_i_c, example_index, t_a_c):
     # Record all similar examples' n_i_c
     N_k_c = []
     for k, example_k in enumerate(S):
