@@ -11,9 +11,11 @@
     - Algorithm 6 Graph-based Rare Category Detection with Less Information (GRADE-LI)
 
 - graph neural network
-    - Algorithm 1 GCC: Graph Contrastive Coding for Graph Neural Network
-Pre-Training 
+    - Algorithm 1 GCC: Graph Contrastive Coding for Graph Neural Network Pre-Training 
     - Algorithm 2 AP_GCN: Adaptive Propagation Graph Convolutional Network
+  
+- nearest neighbour
+  - Algorithm 1 Data structure construction procedure (construct)
 
 
 
