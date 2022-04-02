@@ -54,11 +54,52 @@ class BST:
                 print(node)
                 node = node.right
 
+    def knn_search(self, k, target):
+        if k < 1 or target < 0:
+            print("Parameter error.")
+        k_neighbors = []
+        self._knn_search(k, target, self.root, k_neighbors)
+        return k_neighbors
+
+    def _knn_search(self, k, target, node, k_neighbors):
+        if not node:
+            return
+        else:
+            distance = abs(target - node.key)
+            if (len(k_neighbors) < k) or (distance < k_neighbors[-1][0]):
+                self._knn_search(k, target, node.left, k_neighbors)
+                self._knn_search(k, target, node.right, k_neighbors)
+
+                k_neighbors_length = len(k_neighbors)
+                if k_neighbors_length == 0:
+                    k_neighbors.append((distance, node))
+                else:
+                    for i in range(k_neighbors_length):
+                        if distance >= k_neighbors[i][0]:
+                            i += 1
+                            if i == k_neighbors_length and k_neighbors_length < k:
+                                k_neighbors.append((distance, node))
+                        else:
+                            if k_neighbors_length < k:
+                                k_neighbors.insert(i, (distance, node))
+                                break
+                            else:
+                                k_neighbors[i+1:] = k_neighbors[i:-1]
+                                k_neighbors[i] = (distance, node)
+                                break
+        return
+
 
 if __name__ == '__main__':
 
-    test = [(5.3, 1), (7, 2), (3, 3), (4, 4), (2.9, 5), (8, 6), (6, 7), (1, 8)]
+    test = [(5.3, 1), (7, 2), (3.7, 3), (4, 4), (2.9, 5), (8, 6), (6.9, 7), (1, 8)]
     bst = BST()
     for item in test:
         bst.insert(item[0], item[1])
     bst.inorder_traversal()
+
+    print('----------')
+
+    res = bst.knn_search(8, 3.7)
+    for item in res:
+        print(f'{item[0]}, {item[1]}')
