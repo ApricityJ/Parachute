@@ -103,3 +103,4 @@ if __name__ == '__main__':
     res = bst.knn_search(8, 3.7)
     for item in res:
         print(f'{item[0]}, {item[1]}')
+        print(f'{item[1].key}, {item[1].value}')
