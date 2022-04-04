@@ -16,6 +16,7 @@
   
 - nearest neighbour
   - Algorithm 1 Data structure construction procedure (construct)
+  - Algorithm 2 k-nearest neighbour retrieval procedure
 
 
 
