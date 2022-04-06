@@ -35,8 +35,8 @@ def construct(D, m, L):
     for j in range(m):
         for l in range(L):
             for i in range(n):
-                # Compute Euclidean distance
-                p_jl_bar = np.linalg.norm(D[i] - U_jl[l][j])
+                # Compute inner product
+                p_jl_bar = np.dot(D[i], U_jl[l][j])
                 # Insert into corresponding bst with p_jl_bar being the key and i being the value (i from 1 to n)
                 T_jl[l][j].insert(p_jl_bar, i + 1)
 

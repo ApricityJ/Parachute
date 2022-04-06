@@ -22,7 +22,8 @@ def knn_retrieval_procedure(q, T_jl, U_jl, epsilon, D, k):
     C_l = [[0 for j in range(n)] for i in range(L)]
     # Define q_jl_bar
     q = np.asarray(q)
-    q_jl_bar = np.linalg.norm(q - U_jl, axis=2)
+    # Compute inner product
+    q_jl_bar = np.dot(U_jl, q)
     # Define S_l
     S_l = [set() for i in range(L)]
 
