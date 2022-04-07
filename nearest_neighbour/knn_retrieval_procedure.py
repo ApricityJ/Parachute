@@ -31,14 +31,13 @@ def knn_retrieval_procedure(q, T_jl, U_jl, epsilon, D, k):
         for l in range(L):
             for j in range(m):
                 # To find the node whose key is the ith closest to q_jl_bar[l][j]
-                # i+1 because i begins from 0, i+1+1 because q_jl_bar[l][j] itself should be excluded
-                # To exclude q_jl_bar[l][j] itself, slice [1:]
-                result = T_jl[l][j].knn_search(i + 2, q_jl_bar[l][j])[1:]
-                for res_item in result:
-                    # Get the node index
-                    h_jl_i = res_item[1][1]
-                    # Minus 1 because the range of each C_l[l] is 0 to n-1 while the range of h_jl_i is 1 to n
-                    C_l[l][h_jl_i - 1] = C_l[l][h_jl_i - 1] + 1
+                # i+1 because i begins from 0
+                # slice [i] to get the exact ith closest
+                result = T_jl[l][j].knn_search(i + 1, q_jl_bar[l][j])[i]
+                # Get the node index
+                h_jl_i = result[1][1]
+                # Minus 1 because the range of each C_l[l] is 0 to n-1 while the range of h_jl_i is 1 to n
+                C_l[l][h_jl_i - 1] = C_l[l][h_jl_i - 1] + 1
 
             # The loop here is a little different from the description in the paper
             for n_index in range(n):
