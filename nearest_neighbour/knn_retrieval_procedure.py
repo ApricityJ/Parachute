@@ -70,7 +70,7 @@ def knn_helper(D, indexes, q, k, target='All'):
     euclidean_distances = [np.linalg.norm(q - D[index - 1]) for index in indexes]
     # Find the k closest nodes
     knn_indexes = [i for _, i in sorted(zip(euclidean_distances, indexes))][:k]
-    nodes = [D[index] for index in knn_indexes]
+    nodes = [D[index - 1] for index in knn_indexes]
     # Return all k nodes
     if target == 'All':
         return nodes
