@@ -17,6 +17,8 @@
 - nearest neighbour
   - Algorithm 1 Data structure construction procedure (construct)
   - Algorithm 2 k-nearest neighbour retrieval procedure
+  - Algorithm 3 the same as Algorithm 1
+  - Algorithm 4 Prioritized k-nearest neighbour querying procedure
 
 
 
