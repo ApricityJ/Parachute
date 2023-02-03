@@ -110,3 +110,43 @@ def calculate_PV_of_ordinary_annuity(cash_flow_per_period: float, annual_rate: f
 
 # test
 # print(calculate_PV_of_ordinary_annuity(200, 0.1, 1, 3))
+
+
+def calculate_FV_of_annuity_due(cash_flow_per_period: float, annual_rate: float, periods_per_year: int, years: int) -> float:
+    """
+    calculate FV_annuity_due:= C * [((1 + periodic_rate)^number_of_payments - 1) / periodic_rate] * (1 + periodic_rate)
+
+    Parameters
+    ----------
+    cash_flow_per_period: C in the formula
+    annual_rate: stated annual rate
+    periods_per_year: the number of compounding periods per year
+    years: compounding years
+    """
+    periodic_rate = annual_rate / periods_per_year
+    number_of_payments = periods_per_year * years
+    return cash_flow_per_period * ((pow((1 + periodic_rate), number_of_payments) - 1) / periodic_rate) * (1 + periodic_rate)
+
+
+# test
+# print(calculate_FV_of_annuity_due(200, 0.1, 1, 3))
+
+
+def calculate_PV_of_annuity_due(cash_flow_per_period: float, annual_rate: float, periods_per_year: int, years: int) -> float:
+    """
+    calculate PV_annuity_due:= C * [(1 - (1 + periodic_rate)^(-number_of_payments)) / periodic_rate] * (1 + periodic_rate)
+
+    Parameters
+    ----------
+    cash_flow_per_period: C in the formula
+    annual_rate: stated annual rate
+    periods_per_year: the number of compounding periods per year
+    years: compounding years
+    """
+    periodic_rate = annual_rate / periods_per_year
+    number_of_payments = periods_per_year * years
+    return cash_flow_per_period * ((1 - pow((1 + periodic_rate), -number_of_payments)) / periodic_rate) * (1 + periodic_rate)
+
+
+# test
+# print(calculate_PV_of_annuity_due(200, 0.1, 1, 3))
