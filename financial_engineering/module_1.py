@@ -1,6 +1,7 @@
 """
 Module 1: THE TIME VALUE OF MONEY
 """
+from typing import List
 
 """
 Module 1.1: EAY AND COMPOUNDING FREQUENCY
@@ -150,3 +151,44 @@ def calculate_PV_of_annuity_due(cash_flow_per_period: float, annual_rate: float,
 
 # test
 # print(calculate_PV_of_annuity_due(200, 0.1, 1, 3))
+
+
+def calculate_FV_of_uneven_cash_flow(cash_flow_list: List[float], annual_rate: float, periods_per_year: int) -> float:
+    """
+    calculate FV of uneven cash flow series
+
+    Parameters
+    ----------
+    cash_flow_list: cash flow series
+    annual_rate: stated annual rate
+    periods_per_year: the number of compounding periods per year
+    """
+    cash_flow_length = len(cash_flow_list)
+    total = 0
+    for i, item in enumerate(cash_flow_list):
+        total += calculate_FV(item, annual_rate, periods_per_year, cash_flow_length - i - 1)
+    return total
+
+
+# test
+# print(calculate_FV_of_uneven_cash_flow([300, 600, 200], 0.1, 1))
+
+
+def calculate_PV_of_uneven_cash_flow(cash_flow_list: List[float], annual_rate: float, periods_per_year: int) -> float:
+    """
+    calculate PV of uneven cash flow series
+
+    Parameters
+    ----------
+    cash_flow_list: cash flow series
+    annual_rate: stated annual rate
+    periods_per_year: the number of compounding periods per year
+    """
+    total = 0
+    for i, item in enumerate(cash_flow_list):
+        total += calculate_PV(item, annual_rate, periods_per_year, i + 1)
+    return total
+
+
+# test
+print(calculate_PV_of_uneven_cash_flow([300, 600, 200], 0.1, 1))
