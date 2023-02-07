@@ -23,7 +23,9 @@ def calculate_normally_distributed_SFRatio(portfolio_params: List[list],
     portfolio_params: list of [expect, standard deviation] of every portfolio
     threshold_level: threshold level of return
 
-    return: results and the max index(begin with 1)
+    Returns
+    -------
+    results and the max index(begin with 1)
     """
     results = [((portfolio[0] - threshold_level) / portfolio[1]) for portfolio in portfolio_params]
     return results, results.index(max(results)) + 1
