@@ -62,7 +62,7 @@ def t_statistic_of_differences_in_means(x_bar_1: float, x_bar_2: float, s_square
 
     """
 
-    s_p_square = ((n1 - 1) * s_square_1 + (n2 - 1) * s_square_2) / (n1 + n2 -2)
+    s_p_square = ((n1 - 1) * s_square_1 + (n2 - 1) * s_square_2) / (n1 + n2 - 2)
     denominator = math.sqrt((s_p_square / n1) + (s_p_square / n2))
     return (x_bar_1 - x_bar_2) / denominator
 
@@ -90,3 +90,41 @@ def t_statistic_of_paired_comparisons_test(differences: list, mean_dz: float, n:
     s_d = s_d / (n - 1)
     s_d_bar = s_d / math.sqrt(n)
     return (d_bar - mean_dz) / s_d_bar
+
+
+def chi_square_statistic_of_population_variance(s_square: float, sigma_square: float, n: int) -> float:
+    """
+    hypothesis test of a population variance, a chi-square-statistic with n-1 degrees of freedom
+
+    Parameters
+    ----------
+    s_square: sample variance
+    sigma_square: hypothesized value for the population variance(the null)
+    n: sample size
+
+    Returns
+    -------
+    the test statistic
+
+    """
+
+    return (n -1 ) * s_square / sigma_square
+
+
+def f_statistic_of_differences_in_variances(s_square_1: float, s_square_2: float) -> float:
+    """
+    hypothesis test of a difference in variances, an f-statistic with (n1-1) and (n2-1) degrees of freedom
+
+    Parameters
+    ----------
+    s_square_1: variance of the sample of n1 observations drawn from population 1
+    s_square_2: variance of the sample of n2 observations drawn from population 2
+    (usually put the larger sample variance in the numerator and then only consider the upper critical value)
+
+    Returns
+    -------
+    the test statistic
+
+    """
+
+    return s_square_1 / s_square_2
