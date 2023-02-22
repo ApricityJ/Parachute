@@ -174,21 +174,41 @@ def get_best_f1_threshold(y_pred, y_true):
     return np.max(f1_scores), thresholds[np.argmax(f1_scores)]
 
 
-def f1_score_eval(y_pred, data):
+def lgb_f1_score_eval(y_pred, data):
     y_true = data.get_label()
     f1, threshold = get_best_f1_threshold(y_pred, y_true)
     return 'f1', f1, True
 
 
-def f1_score_multi_macro_eval(y_pred, data, num_class):
+def lgb_f1_score_multi_macro_eval(y_pred, data, num_class):
     y_pred = y_pred.reshape((-1, num_class), order='F')
     predictions = np.argmax(y_pred, axis=1)
     y_true = data.get_label()
     return 'f1-macro', f1_score(y_true, predictions, average='macro'), True
 
 
-def f1_score_multi_weighted_eval(y_pred, data, num_class):
+def lgb_f1_score_multi_weighted_eval(y_pred, data, num_class):
     y_pred = y_pred.reshape((-1, num_class), order='F')
     predictions = np.argmax(y_pred, axis=1)
     y_true = data.get_label()
     return 'f1-weighted', f1_score(y_true, predictions, average='weighted'), True
+
+
+def xgb_f1_score_eval(y_pred, data):
+    y_true = data.get_label()
+    f1, threshold = get_best_f1_threshold(y_pred, y_true)
+    return 'f1', f1
+
+
+def xgb_f1_score_multi_macro_eval(y_pred, data, num_class):
+    # y_pred = y_pred.reshape((-1, num_class), order='F')
+    predictions = np.argmax(y_pred, axis=1)
+    y_true = data.get_label()
+    return 'f1-macro', f1_score(y_true, predictions, average='macro')
+
+
+def xgb_f1_score_multi_weighted_eval(y_pred, data, num_class):
+    # y_pred = y_pred.reshape((-1, num_class), order='F')
+    predictions = np.argmax(y_pred, axis=1)
+    y_true = data.get_label()
+    return 'f1-weighted', f1_score(y_true, predictions, average='weighted')

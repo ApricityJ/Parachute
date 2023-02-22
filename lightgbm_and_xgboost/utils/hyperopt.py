@@ -9,7 +9,7 @@ class Hyperopt(object):
         self.model_type = model_type
         self.model = model
         self.early_stop_dict = {}
-        self.max_evals = 5
+        self.max_evals = 30
 
     def optimize(self) -> dict:
 
@@ -65,7 +65,7 @@ class Hyperopt(object):
             def objective(params):
                 params['num_boost_round'] = int(params['num_boost_round'])
 
-                params['silent'] = 1  # 设置为1则没有运行信息输出
+                params['verbosity'] = 0
                 params['seed'] = self.model.magic_seed
 
                 params['objective'] = self.model.objective
@@ -79,11 +79,12 @@ class Hyperopt(object):
                     num_boost_round=params['num_boost_round'],
                     obj=self.model.obj,
                     feval=self.model.feval,
+                    maximize=self.model.eval_maximize,
                     nfold=5,
                     stratified=True,
                     early_stopping_rounds=50,
                     seed=self.model.magic_seed)
-                print(cv_result)
+                # print(cv_result)
                 self.early_stop_dict[objective.i] = len(cv_result[self.model.eval_key])
                 score = round(cv_result[self.model.eval_key].iloc[-1], 4)
                 objective.i += 1

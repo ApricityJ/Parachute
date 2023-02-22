@@ -9,10 +9,10 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import (f1_score, precision_score, recall_score, confusion_matrix, classification_report)
 from sklearn.utils import Bunch
 
-from lightgbm_and_xgboost.utils.metrics import (f1_score_eval, get_best_f1_threshold,
-                           f1_score_multi_macro_eval, f1_score_multi_weighted_eval)
+from lightgbm_and_xgboost.utils.metrics import (lgb_f1_score_eval, get_best_f1_threshold,
+                           lgb_f1_score_multi_macro_eval, lgb_f1_score_multi_weighted_eval)
 from lightgbm_and_xgboost.utils.hyperopt import Hyperopt
-# from lightgbm_and_xgboost.utils.optuna import Optuna
+from lightgbm_and_xgboost.utils.optuna import Optuna
 from lightgbm_and_xgboost.utils.util import to_json
 
 warnings.filterwarnings("ignore")
@@ -53,7 +53,7 @@ class LightGBM(object):
         self.model = None
         # self.fobj = lambda x, y: f1_loss(x, y)  # 默认None
         self.fobj = None
-        self.feval = f1_score_eval  # 默认None
+        self.feval = lgb_f1_score_eval  # 默认None
         # self.feval = lambda x, y: f1_score_multi_macro_eval(x, y, self.num_class)
         self.eval_key = "f1-mean"
         # self.eval_key = "f1-macro-mean"
