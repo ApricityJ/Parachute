@@ -5,6 +5,8 @@ import warnings
 import numpy as np
 import pandas as pd
 import lightgbm as lgb
+import shap
+import matplotlib.pylab as plt
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import (f1_score, precision_score, recall_score, confusion_matrix, classification_report)
 from sklearn.utils import Bunch
@@ -16,6 +18,8 @@ from lightgbm_and_xgboost.utils.optuna import Optuna
 from lightgbm_and_xgboost.utils.util import to_json
 
 warnings.filterwarnings("ignore")
+plt.rcParams['font.sans-serif']=['SimHei']  # 用来正常显示中文标签
+plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
 
 class LightGBM(object):
@@ -50,7 +54,6 @@ class LightGBM(object):
         self.version = version
 
         self.n_folds = 5
-        self.model = None
         # self.fobj = lambda x, y: f1_loss(x, y)  # 默认None
         self.fobj = None
         self.feval = lgb_f1_score_eval  # 默认None
@@ -168,6 +171,7 @@ class LightGBM(object):
             results = Bunch(f1=f1, precision=precision, recall=recall, cm=cm, test_threshold=test_threshold)
             results.model = model
             results.best_params = params
+            results.columns = self.col_names
             pickle.dump(results, open(self.out_dir / self.out_model_name, 'wb'))
 
     def train_and_predict_multiclass(self, params):
@@ -243,15 +247,23 @@ class LightGBM(object):
             params['verbose'] = -1
             print('train and save model with all data.')
             model = lgb.train(params, self.lgb_train, fobj=self.fobj)
-            results = Bunch(model=model, params=params)
+            results = Bunch(model=model, params=params, columns=self.col_names)
             pickle.dump(results, open(self.out_dir / self.out_model_name, 'wb'))
 
-    # TODO :
-    def print_feature_importance(self):
+    @staticmethod
+    def print_feature_importance(data_bunch):
         print(pd.DataFrame({
-            'column': self.col_names,
-            'importance': self.model.feature_importance(),
+            'column': data_bunch.columns,
+            'importance': data_bunch.model.feature_importance(),
         }).sort_values(by='importance', ascending=False))
 
-        # shap_values = shap.TreeExplainer(model).shap_values(val_x)
-        # shap.summary_plot(shap_values[1], val_x)
+        # plt.figure(figsize=(12, 6))
+        lgb.plot_importance(data_bunch.model, max_num_features=30)
+        plt.title("Feature Importance")
+        plt.show()
+
+    @staticmethod
+    def shap_feature_importance(data_bunch, X):
+        shap_values = shap.TreeExplainer(data_bunch.model).shap_values(X)
+        shap.summary_plot(shap_values, X)
+        shap.summary_plot(shap_values[1], X)

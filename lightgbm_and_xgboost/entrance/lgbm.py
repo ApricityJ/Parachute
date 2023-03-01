@@ -15,12 +15,12 @@ warnings.filterwarnings("ignore")
 if __name__ == '__main__':
 
     args = {
-        'dataset': 'parachute',
+        'dataset': 'first_loan',
         'version': '1',
         'objective': 'binary',  # binary, multiclass...
         'metric': 'auc',  # None需在模型中指定
         'num_class': 2,
-        'is_train': True,
+        'target': 'feature_importance',  # train, predict, feature_importance
         'optimizer': 'optuna',  # hyperopt, optuna...
         'save_experiment': True,
         'data_path': Path("../data"),
@@ -39,7 +39,7 @@ if __name__ == '__main__':
         assert args['num_class'] > 2, 'multiclass objective should have class num > 2.'
     assert args['params_file_name'] != '', 'please name the best params file.'
 
-    if args['is_train']:
+    if args['target'] == 'train':
         print("--------- begin load train and predict data ---------")
         data_bunch = pickle.load(open(args['data_path'] / args['train_file_name'], 'rb'))
         col_names = data_bunch.col_names
@@ -92,7 +92,8 @@ if __name__ == '__main__':
             lightGBM.train_and_predict_multiclass(best_params)
         else:
             pass
-    else:
+
+    elif args['target'] == 'predict':
         assert args['out_model_name'] != '' and args['result_path'] != '', 'please give the model path.'
 
         print("--------- begin load predict data ---------")
@@ -119,3 +120,15 @@ if __name__ == '__main__':
                                .format(args['dataset'], args['version']), index=False)
         else:
             pass
+
+    elif args['target'] == 'feature_importance':
+        assert args['out_model_name'] != '' and args['result_path'] != '', 'please give the model path.'
+
+        data_bunch = pickle.load(open(args['result_path'] / args['out_model_name'], 'rb'))
+        LightGBM.print_feature_importance(data_bunch)
+
+        train_data_bunch = pickle.load(open(args['data_path'] / args['train_file_name'], 'rb'))
+        X = train_data_bunch.data
+        LightGBM.shap_feature_importance(data_bunch, X)
+    else:
+        pass
