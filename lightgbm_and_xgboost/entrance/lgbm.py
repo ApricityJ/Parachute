@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore")
 if __name__ == '__main__':
 
     args = {
-        'dataset': 'first_loan',
+        'dataset': 'parachute',
         'version': '1',
         'objective': 'binary',  # binary, multiclass...
         'metric': 'auc',  # None需在模型中指定

@@ -5,6 +5,8 @@ import warnings
 import numpy as np
 import pandas as pd
 import xgboost as xgb
+import shap
+import matplotlib.pylab as plt
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import (f1_score, precision_score, recall_score, confusion_matrix, classification_report)
 from sklearn.utils import Bunch
@@ -16,6 +18,8 @@ from lightgbm_and_xgboost.utils.optuna import Optuna
 from lightgbm_and_xgboost.utils.util import to_json
 
 warnings.filterwarnings("ignore")
+plt.rcParams['font.sans-serif']=['SimHei']  # 用来正常显示中文标签
+plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
 
 class XGBoost(object):
@@ -46,7 +50,6 @@ class XGBoost(object):
         self.version = version
 
         self.n_folds = 5
-        self.model = None
         # self.obj = lambda x, y: f1_loss(x, y)  # 默认None
         self.obj = None
         # self.feval = xgb_f1_score_eval  # 默认None
@@ -242,12 +245,20 @@ class XGBoost(object):
             results = Bunch(model=model, params=params)
             pickle.dump(results, open(self.out_dir / self.out_model_name, 'wb'))
 
-    # TODO :
-    def print_feature_importance(self):
-        pass
-        # xgb.plot_importance(model)
-        # plt.rcParams['figure.figsize'] = [5, 5]
-        # plt.show()
+    @staticmethod
+    def print_feature_importance(data_bunch):
+        importance_dict = data_bunch.model.get_fscore()
+        print(pd.DataFrame({
+            'column': importance_dict.keys(),
+            'importance': importance_dict.values(),
+        }).sort_values(by='importance', ascending=False))
 
-        # shap_values = shap.TreeExplainer(model).shap_values(val_x)
-        # shap.summary_plot(shap_values[1], val_x)
+        xgb.plot_importance(data_bunch.model, max_num_features=30)
+        plt.title("Feature Importance")
+        plt.show()
+
+    @staticmethod
+    def shap_feature_importance(data_bunch, X):
+        shap_values = shap.TreeExplainer(data_bunch.model).shap_values(X)
+        # shap.summary_plot(shap_values, X, plot_type="bar")
+        shap.summary_plot(shap_values, X)
