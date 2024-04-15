@@ -20,6 +20,9 @@
   - Algorithm 3 the same as Algorithm 1
   - Algorithm 4 Prioritized k-nearest neighbour querying procedure
 
+- evolutionary deep learning
+  - exercises of Evolutionary Deep Learning (EDL)
+
 
 
 ### Requirements
